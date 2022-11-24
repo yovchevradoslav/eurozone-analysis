@@ -4,7 +4,22 @@ import os
 import data_types
 import numpy as np
 
-class CSVAnalyser:
+class DataAnalyser:
+
+    def getRawDataByRowId(self, rowId, transpose=True):
+        if transpose:
+            return self.df.loc[rowId, :].dropna(how='all').transpose()
+        else:
+            return self.df.loc[rowId, :].dropna(how='all')
+
+    def getVariance(self):
+        return statistics.variance(self.df)
+
+    def getMean(self):
+        return statistics.mean(self.df)
+
+
+class CSVAnalyser(DataAnalyser):
 
     def __init__(self, dataProperties: data_types.CSV):
 
@@ -14,15 +29,23 @@ class CSVAnalyser:
         self.dataOffset = dataProperties.dataOffset
         self.separator = dataProperties.separator
 
-        dataframe = pd.read_csv(self.source , sep=self.separator)
-        dataframe.set_index(self.indexName, inplace=True)
-        dataframe.drop(dataframe.iloc[:, 0:self.dataOffset], axis=1, inplace=True)
-        self.dataframe = dataframe
+        df = pd.read_csv(self.source , sep=self.separator)
+        df.set_index(self.indexName, inplace=True)
+        df.drop(df.iloc[:, 0:self.dataOffset], axis=1, inplace=True)
+        self.df = df
 
-    def getRawDataByRowId(self, rowId):
+class TSVAnalyser(DataAnalyser):
+
+    def __init__(self, dataProperties: data_types.TSV):
+
+        self.source = dataProperties.source
+        self.indexName = dataProperties.indexName
+
+        df = pd.read_table(self.source)
+        df.set_index(self.indexName, inplace=True)
+        self.df = df
+
     
-        return self.dataframe.loc[rowId, :]
 
-    def getVarianceByRowId(self, rowId):
 
-        return statistics.variance(self.dataframe.loc[rowId, :])
+

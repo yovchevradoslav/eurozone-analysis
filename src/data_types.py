@@ -6,3 +6,9 @@ class CSV:
     indexName: str
     dataOffset: int
     separator: str
+
+@dataclass
+class TSV:
+    source: str
+    indexName: str
+
