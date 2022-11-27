@@ -3,69 +3,91 @@ import statistics
 import os
 import data_types
 import numpy as np
+import math
 
 class DataAnalyser:
 
+    def refineSet(self):
+        self.df = self.df.applymap(self.transformDataset)
+        self.df.apply(pd.to_numeric) 
+        return self
 
     def getDataframe(self):
         return self.df
 
-    def addFilterByCountry(self, rowIds, transpose=True):
-        if transpose:
-            modified = self.df.loc[rowIds, :].dropna(how='all').transpose()
-            self.df = modified
-        else:
-            self.df.replace(self.df.loc[rowIds, :].dropna(how='all'))
+    def addFilterByCountry(self, rowIds):
+        modified = self.df.loc[:, rowIds].dropna(how='all')
+        self.df = modified
         return self
             
     def getVariance(self, rowId):
         return statistics.variance(self.df[rowId])
 
     def addAverage(self, rowIds):
-        print(self.df.loc[:, rowIds])
+        average = []
+        for year in self.df.index:   
+            average.append(self.calculateAverageFromSeries(self.df.loc[year,:]))
+        self.df.insert(0, 'Average', average)
         return self
 
-    # def addVariability(self, rowId):
-    #     modified = self.df.loc[rowId, :].dropna(how='all').transpose()
-    #     self.df.update(modified) 
-    #     return (self.df['Average'] - self.df[rowId])/self.df['Average']
+    def transformDataset(self, x):
+        try:
+            x = float(x)
+            return x
+        except:
+            x = float('nan')
+            return x
     
     def renameColumns(self, func):
         self.df.rename(func, inplace=True, axis=0)
         return self
-        
+
+    def calculateAverageFromSeries(self, series):
+        sum = 0
+        n = 0 
+        for item in series:
+            if not math.isnan(item):
+                sum += item
+                n += 1
+        if n > 0: 
+            return sum/n
+        else: 
+            return float('nan')
+
 
 class CSVTimeseriesAnalyser(DataAnalyser):
 
     def __init__(self, dataProperties: data_types.CSVTimeseries):
 
-        self.dataProperties = dataProperties
-        self.source = dataProperties.source
-        self.indexName = dataProperties.indexName
-        self.dataOffset = dataProperties.dataOffset
-        self.separator = dataProperties.separator
-
-        df = pd.read_csv(self.source , sep=self.separator)
-        df.set_index(self.indexName, inplace=True)
-        df.drop(df.iloc[:, 0:self.dataOffset], axis=1, inplace=True)
+        df = pd.read_csv(dataProperties.source , sep=dataProperties.separator)
+        df.set_index(dataProperties.indexName, inplace=True)
+        df.drop(df.iloc[:, 0:dataProperties.dataOffset], axis=1, inplace=True)
+        if dataProperties.transpose: df = df.transpose()
         df.name = dataProperties.name
-        self.df = df
+        self.df = df        
 
 class CSVSequenceAnalyser(DataAnalyser):
 
     def __init__(self, dataProperties: data_types.CSVSequence):
 
-        self.source = dataProperties.source
-        self.indexName = dataProperties.indexName
-        self.dateColumnName = dataProperties.dateColumnName
-        self.valueColumntName = dataProperties.valueColumntName
-        self.separator = dataProperties.separator
-
-        df = pd.read_csv(self.source , sep=self.separator)
-        df.set_index(self.indexName, inplace=True)
+        df = pd.read_csv(dataProperties.source , sep=dataProperties.separator)
         df.name = dataProperties.name
-        refinedDf = df[[self.dateColumnName, self.valueColumntName]]
-        self.df = refinedDf
+        df = df.loc[:,:]
+        df.set_index(dataProperties.indexName, inplace=True)        
+        newIndex = list(df.index.unique())
+        newColumns = np.unique(list(df.loc[:,'Time']))
+        print(newIndex)
+        print(newColumns)
+        data = []
+        for country in newIndex:
+            elem = []
+            # elem.append(country)
+            elem += list(df.loc[country, "Value"])
+            data.append(elem)
+        
+        print(data)
+        newDf = pd.DataFrame(data, newIndex, newColumns)
+        self.df = newDf.transpose()
 
 
 class TSVAnalyser(DataAnalyser):
@@ -77,7 +99,10 @@ class TSVAnalyser(DataAnalyser):
         df = pd.read_table(self.source)
         df.set_index(dataProperties.indexName, inplace=True)
         df.name = dataProperties.name
-        self.df = df
+        if dataProperties.transpose: 
+            self.df = df.transpose()
+        else: 
+            self.df = df
 
     
 

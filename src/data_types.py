@@ -10,6 +10,7 @@ class CSVTimeseries:
     indexName: str
     dataOffset: int
     separator: str
+    transpose: bool
 
 @dataclass
 class CSVSequence:
@@ -20,13 +21,15 @@ class CSVSequence:
     source: str
     indexName: str
     dateColumnName: str
-    valueColumntName: str
+    valueColumnName: str
     separator: str
+    transpose: bool
 
 @dataclass
 class TSV:
     name: str
     source: str
     indexName: str
+    transpose: bool
 
 

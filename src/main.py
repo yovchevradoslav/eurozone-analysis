@@ -13,32 +13,36 @@ def modifyDate(x):
 
 
 eurozone = ['Austria', 'Belgium', 'Germany', 'Italy', 'Ireland', 'Luxembourg', 'Netherlands', 'France',	'Finland',	'Greece', 'Spain', 'Portugal', 'Cyprus', 'Malta']
-earlyEurozone = ['Luxembourg', 'Ireland']
+earlyEurozone = ['Austria']
 
-GDPGrowthDescriptor = data_types.CSVTimeseries("GDP Growth", getDataSource("gdp-growth.csv"), "Country Name", 3, ",")
-DebtToGDPDescriptor = data_types.CSVTimeseries("Debt To GDP", getDataSource("debt-to-gdp.csv"), "Country Name", 3, ",")
-UnemploymentDescriptor = data_types.TSV("Unemployment", getDataSource("unemployment.tsv"), "Country Name")
-TradeUnionismDescriptor = data_types.CSVSequence("Trade Union Density", getDataSource("trade-unionism.csv"), "Country", "Time", "Value", ",")
+GDPGrowthDescriptor = data_types.CSVTimeseries("GDP Growth", getDataSource("gdp-growth.csv"), "Country Name", 3, ",", True)
+DebtToGDPDescriptor = data_types.CSVTimeseries("Debt To GDP", getDataSource("debt-to-gdp.csv"), "Country Name", 3, ",", True)
+UnemploymentDescriptor = data_types.TSV("Unemployment", getDataSource("unemployment.tsv"), "Country Name", True)
+TradeUnionDensityDescriptor = data_types.CSVSequence("Trade Union Density", getDataSource("trade-unionism.csv"), "Country", "Time", "Value", ",", True)
 
 
 
-# GDPGrowthAnalyser = data_handler.CSVTimeseriesAnalyser(GDPGrowthDescriptor)
-# DebtToGDPAnalyser = data_handler.CSVTimeseriesAnalyser(DebtToGDPDescriptor)
+GDPGrowthAnalyser = data_handler.CSVTimeseriesAnalyser(GDPGrowthDescriptor)
+DebtToGDPAnalyser = data_handler.CSVTimeseriesAnalyser(DebtToGDPDescriptor)
 UnemploymentAnalyser = data_handler.TSVAnalyser(UnemploymentDescriptor)
-#TradeUnionismAnalyser = data_handler.CSVSequenceAnalyser(TradeUnionismDescriptor)
+TradeUnionDensityAnalyser = data_handler.CSVSequenceAnalyser(TradeUnionDensityDescriptor)
 
 
-# debtToGDP = UnemploymentAnalyser.addFilterByCountry(eurozone)
-# gdpGrowth = GDPGrowthAnalyser.addFilterByCountry('Portugal')
-#tradeUnionism = TradeUnionismAnalyser.addFilterByCountry(eurozone, transpose=True)
+# GDPGrowth = GDPGrowthAnalyser.refineSet().addFilterByCountry(eurozone).addAverage(eurozone).getDataframe()
+# print(GDPGrowth)
 
+# debtToGDP = DebtToGDPAnalyser.refineSet().addFilterByCountry(eurozone).addAverage(eurozone).getDataframe()
+# print(debtToGDP)
 
-unemployment = UnemploymentAnalyser.addFilterByCountry(earlyEurozone, True).addAverage(earlyEurozone).renameColumns(modifyDate).getDataframe()
-print(unemployment)
+# unemployment = UnemploymentAnalyser.refineSet().addFilterByCountry(eurozone).renameColumns(modifyDate).addAverage(eurozone).getDataframe()
+# print(unemployment)
 
+tradeUnionDensity = TradeUnionDensityAnalyser.refineSet().getDataframe()
+print(tradeUnionDensity)
 
 
 #print(pd.concat([unemployment, gdpGrowth, tradeUnionism], axis=1))
 
-# GDPGrowthAnalyser.getRawDataByRowId(eurozone).to_excel("gdp-growth.xlsx")
+# 
+# DebtToGDPAnalyser.getDataframe().to_excel("../outputs/gdp-growth.xlsx")
 # UnemploymentAnalyser.getRawDataByRowId("Bulgaria").to_excel("unemployment.xlsx")
