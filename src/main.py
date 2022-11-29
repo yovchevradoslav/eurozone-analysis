@@ -28,18 +28,21 @@ UnemploymentAnalyser = data_handler.TSVAnalyser(UnemploymentDescriptor)
 TradeUnionDensityAnalyser = data_handler.CSVSequenceAnalyser(TradeUnionDensityDescriptor)
 
 
-# GDPGrowth = GDPGrowthAnalyser.refineSet().addFilterByCountry(eurozone).addAverage(eurozone).getDataframe()
+# GDPGrowth = GDPGrowthAnalyser.refineSet().addFilterByCountry(eurozone).addAverage().getDataframe()
 # print(GDPGrowth)
 
-# debtToGDP = DebtToGDPAnalyser.refineSet().addFilterByCountry(eurozone).addAverage(eurozone).getDataframe()
+# debtToGDP = DebtToGDPAnalyser.refineSet().addFilterByCountry(eurozone).addAverage().getDataframe()
 # print(debtToGDP)
 
 # unemployment = UnemploymentAnalyser.refineSet().addFilterByCountry(eurozone).renameColumns(modifyDate).addAverage(eurozone).getDataframe()
 # print(unemployment)
 
-tradeUnionDensity = TradeUnionDensityAnalyser.refineSet().getDataframe()
-print(tradeUnionDensity)
+tradeUnionDensity = TradeUnionDensityAnalyser.refineSet().addAverage().getDataframe()
 
+axis = ["Bulgaria", "Italy", "Germany"]
+columns = ["1960", "1961", "1962"]
+newDf = pd.DataFrame([], axis, columns)
+# print(newDf)
 
 #print(pd.concat([unemployment, gdpGrowth, tradeUnionism], axis=1))
 

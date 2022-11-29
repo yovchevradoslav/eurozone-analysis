@@ -15,19 +15,28 @@ class DataAnalyser:
     def getDataframe(self):
         return self.df
 
-    def addFilterByCountry(self, rowIds):
-        modified = self.df.loc[:, rowIds].dropna(how='all')
+    def addFilterByCountry(self, listOfCountries):
+        modified = self.df.loc[:, listOfCountries].dropna(how='all')
         self.df = modified
         return self
             
-    def getVariance(self, rowId):
-        return statistics.variance(self.df[rowId])
+    def getVariance(self, country):
+        return statistics.variance(self.df[country])
 
-    def addAverage(self, rowIds):
+    def addAverage(self):
         average = []
         for year in self.df.index:   
             average.append(self.calculateAverageFromSeries(self.df.loc[year,:]))
         self.df.insert(0, 'Average', average)
+        return self
+
+    def addVarFromAverage(self, country):
+        """
+        Adds a variability column. Requires an Average column. 
+        """
+        average = self.df.loc[:,'Average']
+        countryValues = self.df.loc[:,country]
+        self.df.insert(0, "{} variability".format(country), (countryValues - average)/average)
         return self
 
     def transformDataset(self, x):
@@ -58,7 +67,9 @@ class DataAnalyser:
 class CSVTimeseriesAnalyser(DataAnalyser):
 
     def __init__(self, dataProperties: data_types.CSVTimeseries):
-
+        """
+        Loading and normalizing csv file such as debt-to-gdp.csv
+        """
         df = pd.read_csv(dataProperties.source , sep=dataProperties.separator)
         df.set_index(dataProperties.indexName, inplace=True)
         df.drop(df.iloc[:, 0:dataProperties.dataOffset], axis=1, inplace=True)
@@ -69,31 +80,35 @@ class CSVTimeseriesAnalyser(DataAnalyser):
 class CSVSequenceAnalyser(DataAnalyser):
 
     def __init__(self, dataProperties: data_types.CSVSequence):
-
+        """
+        Loading and normalizing csv file sucha as trade-unionism.csv
+        """
         df = pd.read_csv(dataProperties.source , sep=dataProperties.separator)
         df.name = dataProperties.name
-        df = df.loc[:,:]
-        df.set_index(dataProperties.indexName, inplace=True)        
-        newIndex = list(df.index.unique())
-        newColumns = np.unique(list(df.loc[:,'Time']))
-        print(newIndex)
-        print(newColumns)
+        countries = np.unique(list(df.loc[:, dataProperties.countryColumnName]))
+        years = np.unique(list(df.loc[:,dataProperties.dateColumnName]))
         data = []
-        for country in newIndex:
-            elem = []
-            # elem.append(country)
-            elem += list(df.loc[country, "Value"])
-            data.append(elem)
-        
-        print(data)
-        newDf = pd.DataFrame(data, newIndex, newColumns)
-        self.df = newDf.transpose()
+        for year in years:
+            element = []
+            for country in countries:
+                try:
+                    a = float(df[(df[dataProperties.dateColumnName] == year) & (df[dataProperties.countryColumnName] == country)][dataProperties.valueColumnName])
+                except:
+                    a = float('nan')
+                element.append(a)
+            data.append(element)
+        self.df = pd.DataFrame(data, years, countries)
+        print(self.df)
+                
+
 
 
 class TSVAnalyser(DataAnalyser):
 
     def __init__(self, dataProperties: data_types.TSV):
-
+        """
+        Loading and normalizing tsv file such as debt-to-gdp.csv
+        """
         self.source = dataProperties.source
         
         df = pd.read_table(self.source)

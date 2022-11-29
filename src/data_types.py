@@ -19,7 +19,7 @@ class CSVSequence:
     """
     name: str
     source: str
-    indexName: str
+    countryColumnName: str
     dateColumnName: str
     valueColumnName: str
     separator: str
