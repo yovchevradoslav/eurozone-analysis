@@ -22,9 +22,8 @@ class DataAnalyser:
     def get_dataframe(self):
         return self.df
 
-    @error.throws_error('InvalidFilter')
+    @error.throws_error(error.InvalidFilter)
     def add_filter_by_country(self, list_of_countries):
-        print('ADDING FILTER: ' + str(list_of_countries))
         modified = self.df.loc[:, list_of_countries].dropna(how='all')
         self.df = modified
         return self

@@ -1,27 +1,23 @@
 import functools
 
 class InvalidFilter(Exception):
-    print('The country param is invalid')
+    def __init__(self):
+        self.message = 'Invalid Filter'
 
 class InvalidDataStructure(Exception):
-    print('The structure of your data is unsupported by the refinement process')
+    def __init__(self):
+        self.message = 'Invalid Data Structure'
 
 class InvalidErrorTypeInDecorator(Exception):
-    def __init__():
+    def __init__(self):
+        self.message = 'message'
 
-exceptions = {
-        'InvalidFilter': InvalidFilter,
-        'InvalidDataStructure': InvalidDataStructure,
-        'InvalidErrorTypeInDecorator': InvalidErrorTypeInDecorator
-    }
-
-def throws_error(error_type: str):
+def throws_error(exception: Exception):
     def decorator(function):
         def wrapper(*args, **kwargs):
-            print('inside wrapper')
             try:
                 return function(*args, **kwargs)
             except:
-                raise exceptions[error_type]
+                raise exception
         return wrapper
     return decorator
