@@ -20,24 +20,27 @@ UnemploymentDescriptor = data_types.TSV("Unemployment", getDataSource("unemploym
 TradeUnionDensityDescriptor = data_types.CSVSequence("Trade Union Density", getDataSource("trade-unionism.csv"), "Country", "Time", "Value", ",", True)
 GovernmentSpendingDescriptor = data_types.TSV("Government Spending", getDataSource("gov-expenditure.tsv"), "Country", True)
 IntraExtraTrade = data_types.CSVTimeseries("Intra/Extra EU Trade", getDataSource("export-intra-by-extra.csv"), "Country", 0, ";", True)
-
-
-GDPGrowthAnalyser = data_handler.CSVTimeseriesAnalyser(GDPGrowthDescriptor)
-DebtToGDPAnalyser = data_handler.CSVTimeseriesAnalyser(DebtToGDPDescriptor)
-UnemploymentAnalyser = data_handler.TSVAnalyser(UnemploymentDescriptor)
-TradeUnionDensityAnalyser = data_handler.CSVSequenceAnalyser(TradeUnionDensityDescriptor)
-government_spending = data_handler.TSVAnalyser(GovernmentSpendingDescriptor)
-intra_extra_trade = data_handler.CSVTimeseriesAnalyser(IntraExtraTrade)
+DeficitDescriptor = data_types.TSV("Deficit", getDataSource("deficit.tsv"), "Country", True)
 
 
 
-# gdp_growth = GDPGrowthAnalyser.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average('Portugal')
-# print(type(gdp_growth.index))
 
-# debt_to_gdp = DebtToGDPAnalyser.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average('Portugal')
+gdp_growth_analyser = data_handler.CSVTimeseriesAnalyser(GDPGrowthDescriptor)
+# debt_to_gdp_analyser = data_handler.CSVTimeseriesAnalyser(DebtToGDPDescriptor)
+# unemployment_analyser = data_handler.TSVAnalyser(UnemploymentDescriptor)
+# TradeUnionDensityAnalyser = data_handler.CSVSequenceAnalyser(TradeUnionDensityDescriptor)
+# government_spending = data_handler.TSVAnalyser(GovernmentSpendingDescriptor)
+# intra_extra_trade = data_handler.CSVTimeseriesAnalyser(IntraExtraTrade)
+# deficit = data_handler.TSVAnalyser(DeficitDescriptor)
+
+
+gdp_growth = gdp_growth_analyser.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average('Portugal')
+print(gdp_growth)
+
+# debt_to_gdp = debt_to_gdp_analyser.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average('Portugal')
 # print(type(debt_to_gdp.index))
 
-# unemployment = UnemploymentAnalyser.refine_set().add_filter_by_country(eurozone).rename_columns(modifyDate).add_average().get_var_to_average('Portugal')
+# unemployment = unemployment_analyser.refine_set().add_filter_by_country(eurozone).rename_columns(modifyDate).add_average().get_var_to_average('Portugal')
 # # print(unemployment)
 
 # trade_union_density = TradeUnionDensityAnalyser.refine_set().add_average().get_var_to_average('Portugal')
@@ -51,6 +54,9 @@ intra_extra_trade = data_handler.CSVTimeseriesAnalyser(IntraExtraTrade)
 
 # intra_extra_trade = intra_extra_trade.refine_set().add_filter_by_country("Portugal").get_dataframe()
 # print(intra_extra_trade)
+
+# deficit = deficit.refine_set().add_filter_by_country("Portugal").get_dataframe()
+# print(deficit)
 
 # print(pd.concat([unemployment, trade_union_density, debt_to_gdp, gdp_growth], axis=1).to_excel('../outputs/report1.xlsx'))
 

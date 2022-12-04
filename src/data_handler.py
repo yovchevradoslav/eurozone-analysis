@@ -4,6 +4,7 @@ import os
 import data_types
 import numpy as np
 import math
+import error
 
 class DataAnalyser:
 
@@ -17,10 +18,13 @@ class DataAnalyser:
         self.df.index = self.df.index.astype("unicode")
         return self
 
+
     def get_dataframe(self):
         return self.df
 
+    @error.throws_error('InvalidFilter')
     def add_filter_by_country(self, list_of_countries):
+        print('ADDING FILTER: ' + str(list_of_countries))
         modified = self.df.loc[:, list_of_countries].dropna(how='all')
         self.df = modified
         return self
