@@ -13,9 +13,10 @@ class DataAnalyser:
         Turn all elements in the dataset in float values. 
         In case of non numeric value such as ":", the value is replaced by NaN
         '''
-        self.df = self.df.applymap(self.transform_dataset)
+        self.df = self.df.applymap(self.transform_to_float)
         self.df.apply(pd.to_numeric)
         self.df.index = self.df.index.astype("unicode")
+        self.df.index = map(self.remove_spaces, self.df.index)
         return self
 
 
@@ -75,13 +76,16 @@ class DataAnalyser:
         filteredDf.name = self.data_properties.name
         return filteredDf
 
-    def transform_dataset(self, x):
+    def transform_to_float(self, x):
         try:
             x = float(x)
             return x
         except:
             x = float('nan')
             return x
+
+    def remove_spaces(self, x):
+        return x.replace(" ", "")
     
     def rename_columns(self, func):
         '''

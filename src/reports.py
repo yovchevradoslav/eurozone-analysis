@@ -1,5 +1,6 @@
 
 from abc import abstractmethod
+import shutil
 import pandas as pd
 import os
 
@@ -20,11 +21,15 @@ class GenericReport():
     
     @abstractmethod
     def publish(self, report_name):
-        dataframes = self.generate_dataframes()
-        print(dataframes[0].name)
-        if not os.path.exists(self.report_dir):
+        try:
+            dataframes = self.generate_dataframes()
+            shutil.rmtree(self.report_dir)
+        except Exception as e:
+            print('Dataframes failed for whatever reason')
+            print(e.with_traceback)
+        finally:
             os.mkdir(self.report_dir, 0o777)
-        pd.concat(dataframes, axis=1).to_excel( self.report_dir + '/' + report_name + ".xlsx")
+            pd.concat(dataframes, axis=1).to_excel( self.report_dir + '/' + report_name + ".xlsx")
 
     @abstractmethod
     def modifyDate(self, x):
@@ -49,6 +54,7 @@ class SimpleVariablesReport(GenericReport):
         deficit = self.analyser.deficit.refine_set().add_filter_by_country(self.settings['country']).get_dataframe('Deficit')
 
         return [debt_to_gdp, gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit]
+
 
 
 class VariabilityToAverageReport(GenericReport):
