@@ -1,5 +1,3 @@
-import functools
-
 class InvalidFilter(Exception):
     def __init__(self):
         self.message = 'Invalid Filter'
@@ -7,10 +5,6 @@ class InvalidFilter(Exception):
 class InvalidDataStructure(Exception):
     def __init__(self):
         self.message = 'Invalid Data Structure'
-
-class InvalidErrorTypeInDecorator(Exception):
-    def __init__(self):
-        self.message = 'message'
 
 def throws_error(exception: Exception):
     def decorator(function):

@@ -1,10 +1,10 @@
 import pandas as pd
 import statistics 
 import os
-import data_types
+import src.data_types as data_types
 import numpy as np
 import math
-import error
+import src.error as error
 
 class DataAnalyser:
 
