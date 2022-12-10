@@ -8,5 +8,8 @@ DATA_PATH = "{}/data".format(ROOT_DIR)
 REPORTS_PATH = "{}/reports".format(ROOT_DIR)
 
 analyser = analysers.GenericAnalyser(DATA_PATH)
-simple_report = reports.SimpleVariablesReport(analyser, REPORTS_PATH)
-simple_report.publish('simple')
+simple_report_portugal = reports.SimpleVariablesReport(analyser, REPORTS_PATH, {"country": "Portugal"})
+simple_report_portugal.publish('simple_report_portugal')
+
+# variability_report = reports.SimpleVariablesReport(analyser, REPORTS_PATH, {"country": "Portugal"})
+# simple_report.publish('simple_report_portugal')

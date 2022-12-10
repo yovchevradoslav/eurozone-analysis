@@ -19,7 +19,8 @@ class DataAnalyser:
         return self
 
 
-    def get_dataframe(self):
+    def get_dataframe(self, name: str):
+        self.df.name = name
         return self.df
 
     @error.throws_error(error.InvalidFilter)
@@ -117,7 +118,6 @@ class CSVTimeseriesAnalyser(DataAnalyser):
         df.drop(df.iloc[:, 0:data_properties.dataOffset], axis=1, inplace=True)
         if data_properties.transpose: df = df.transpose()
         self.df = df 
-        self.df.name = data_properties.name       
 
 class CSVSequenceAnalyser(DataAnalyser):
 
@@ -142,7 +142,6 @@ class CSVSequenceAnalyser(DataAnalyser):
             data.append(element)
         self.df = pd.DataFrame(data, years, countries)
         self.df.set_index(years, inplace=True)
-        self.df.name = data_properties.name               
 
 class TSVAnalyser(DataAnalyser):
 
@@ -159,7 +158,6 @@ class TSVAnalyser(DataAnalyser):
             self.df = df.transpose()
         else: 
             self.df = df
-        self.df.name = data_properties.name
 
     
 
