@@ -15,7 +15,7 @@ class GenericReport():
     @abstractmethod
     def generate_dataframes(self):
         """
-        return: set of dataframes
+        return: list of dataframes
         """
         pass
     
