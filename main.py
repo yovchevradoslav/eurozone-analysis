@@ -16,10 +16,11 @@ except Exception as e:
     print(e.with_traceback)
 finally:
     os.mkdir(REPORTS_PATH)
-    analyser = analysers.GenericAnalyser(DATA_PATH)
-    
-    simple_report_portugal = reports.SimpleVariablesReport(analyser, REPORTS_PATH, {"country": "Portugal"})
+
+    simple_report_analyser = analysers.GenericAnalyser(DATA_PATH)
+    simple_report_portugal = reports.SimpleVariablesReport(simple_report_analyser, REPORTS_PATH, {"country": "Portugal"})
     simple_report_portugal.publish('simple_report_portugal')
 
-    variability_report_portugal = reports.VariabilityToAverageReport(analyser, REPORTS_PATH, {"country": "Portugal"})
+    variability_report_analyser = analysers.GenericAnalyser(DATA_PATH)
+    variability_report_portugal = reports.VariabilityToAverageReport(variability_report_analyser, REPORTS_PATH, {"country": "Portugal"})
     variability_report_portugal.publish('variability_report_portugal')

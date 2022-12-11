@@ -5,6 +5,7 @@ class CSVTimeseries:
     """
     Used when the timeseries are placed as columns
     """
+    name: str
     source: str
     indexName: str
     dataOffset: int
@@ -16,6 +17,7 @@ class CSVSequence:
     """
     Used when timeseries are placed as a sequence
     """
+    name: str
     source: str
     countryColumnName: str
     dateColumnName: str
@@ -25,6 +27,7 @@ class CSVSequence:
 
 @dataclass
 class TSV:
+    name: str
     source: str
     indexName: str
     transpose: bool
