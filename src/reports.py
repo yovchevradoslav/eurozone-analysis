@@ -21,16 +21,9 @@ class GenericReport():
     
     @abstractmethod
     def publish(self, report_name):
-        try:
-            dataframes = self.generate_dataframes()
-            shutil.rmtree(self.report_dir)
-        except Exception as e:
-            print('Dataframes failed for whatever reason')
-            print(e.with_traceback)
-        finally:
-            os.mkdir(self.report_dir, 0o777)
-            pd.concat(dataframes, axis=1).to_excel( self.report_dir + '/' + report_name + ".xlsx")
-
+        dataframes = self.generate_dataframes()
+        pd.concat(dataframes, axis=1).to_excel( self.report_dir + '/' + report_name + ".xlsx")
+    
     @abstractmethod
     def modifyDate(self, x):
         return x.split("-")[0]
@@ -63,25 +56,16 @@ class VariabilityToAverageReport(GenericReport):
 
         eurozone = ['Austria', 'Belgium', 'Germany', 'Italy', 'Ireland', 'Luxembourg', 'Netherlands', 'France',	'Finland',	'Greece', 'Spain', 'Portugal', 'Cyprus', 'Malta']
 
-        gdp_growth = self.analyser.gdp_growth.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average('Portugal')
-        print(gdp_growth)
+        gdp_growth = self.analyser.gdp_growth.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average(self.settings['country'])
 
-        debt_to_gdp = self.analyser.debt_to_gdp.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average('Portugal')
-        print(debt_to_gdp)
+        unemployment = self.analyser.unemployment.refine_set().add_filter_by_country(eurozone).rename_columns(self.modifyDate).add_average().get_var_to_average(self.settings['country'])
 
-        unemployment = self.analyser.unemployment.refine_set().add_filter_by_country(eurozone).rename_columns(self.modifyDate).add_average().get_var_to_average('Portugal')
-        print(unemployment)
+        trade_union_density = self.analyser.trade_union_density.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average(self.settings['country'])
 
-        trade_union_density = self.analyser.trade_union_density.refine_set().add_average().get_var_to_average('Portugal')
-        print(type(trade_union_density.index))
+        government_spending = self.analyser.government_spending.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average(self.settings['country'])
 
-        government_spending = self.analyser.government_spending.refine_set().get_var_to_average('Slovakia')
-        print(government_spending)
+        intra_extra_trade = self.analyser.intra_extra_trade.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average(self.settings['country'])
 
-        intra_extra_trade = self.analyser.intra_extra_trade.refine_set().add_filter_by_country("Portugal").get_dataframe()
-        print(intra_extra_trade)
+        deficit = self.analyser.deficit.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average(self.settings['country'])
 
-        deficit = self.analyser.deficit.refine_set().add_filter_by_country("Portugal").get_dataframe()
-        print(deficit)
-
-        return [debt_to_gdp, gdp_growth]
+        return [gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit]
