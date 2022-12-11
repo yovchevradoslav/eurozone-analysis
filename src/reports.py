@@ -46,7 +46,9 @@ class SimpleVariablesReport(GenericReport):
 
         deficit = self.analyser.deficit.refine_set().add_filter_by_country(self.settings['country']).get_dataframe('Deficit')
 
-        return [debt_to_gdp, gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit]
+        inflation = self.analyser.inflation.refine_set().add_filter_by_country(self.settings['country']).rename_columns(self.modifyDate).get_dataframe('Inflation')
+
+        return [debt_to_gdp, gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit, inflation]
 
 
 
@@ -68,4 +70,6 @@ class VariabilityToAverageReport(GenericReport):
 
         deficit = self.analyser.deficit.refine_set().add_filter_by_country(eurozone).add_average().get_var_to_average(self.settings['country'])
 
-        return [gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit]
+        inflation = self.analyser.inflation.refine_set().add_filter_by_country(eurozone).rename_columns(self.modifyDate).add_average().get_var_to_average(self.settings['country'])
+
+        return [gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit, inflation]

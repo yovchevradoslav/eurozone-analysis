@@ -12,6 +12,8 @@ class GenericAnalyser:
         GovernmentSpendingDescriptor = data_types.TSV("Government Spending", "{}/gov-expenditure.tsv".format(data_path), "Country", True)
         IntraExtraTrade = data_types.CSVTimeseries("Intra/Extra EU Trade", "{}/export-intra-by-extra.csv".format(data_path), "Country", 0, ";", True)
         DeficitDescriptor = data_types.TSV("Deficit", "{}/deficit.tsv".format(data_path), "Country", True)
+        InflationDescriptor = data_types.TSV("Inflation", "{}/inflation".format(data_path), "Country", True)
+
 
         self.gdp_growth = data_handler.CSVTimeseriesAnalyser(GDPGrowthDescriptor)
         self.debt_to_gdp = data_handler.CSVTimeseriesAnalyser(DebtToGDPDescriptor)
@@ -20,3 +22,4 @@ class GenericAnalyser:
         self.government_spending = data_handler.TSVAnalyser(GovernmentSpendingDescriptor)
         self.intra_extra_trade = data_handler.CSVTimeseriesAnalyser(IntraExtraTrade)
         self.deficit = data_handler.TSVAnalyser(DeficitDescriptor)
+        self.inflation = data_handler.TSVAnalyser(InflationDescriptor)
