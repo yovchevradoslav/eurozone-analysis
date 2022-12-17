@@ -55,13 +55,27 @@ class DataAnalyser:
         self.df.insert(0, "{} variability".format(country), (countryValues - average))
         return self
 
-    def get_variability(self, country):
+    def get_variability(self, country, percent=False):
         """
         returns series of variability
         """
         average = self.df.loc[:,'Average']
         countryValues = self.df.loc[:,country]
-        filteredDf = countryValues - average
+        if percent:
+            filteredDf = (countryValues - average)/100
+        else:
+            filteredDf = countryValues - average
+        
+        filteredDf.name = self.data_properties.name
+        return filteredDf
+
+    def get_ratio_to_average(self, country):
+        """
+        returns series of variability
+        """
+        average = self.df.loc[:,'Average']
+        countryValues = self.df.loc[:,country]
+        filteredDf = countryValues/average
         filteredDf.name = self.data_properties.name
         return filteredDf
     
