@@ -34,7 +34,7 @@ class SimpleVariablesReport(GenericReport):
         
         gdp_growth = self.analyser.gdp_growth.refine_set().add_filter_by_country(self.settings['country']).get_dataframe('GDP Growth')
 
-        debt_to_gdp = self.analyser.debt_to_gdp.refine_set().add_filter_by_country(self.settings['country']).get_dataframe('Debt to GDP')
+        trade_balance = self.analyser.trade_balance.refine_set().add_filter_by_country(self.settings['country']).get_dataframe('Trade Balance')
 
         unemployment = self.analyser.unemployment.refine_set().add_filter_by_country(self.settings['country']).rename_columns(self.modifyDate).get_dataframe('Unemployment')
 
@@ -48,7 +48,7 @@ class SimpleVariablesReport(GenericReport):
 
         inflation = self.analyser.inflation.refine_set().add_filter_by_country(self.settings['country']).rename_columns(self.modifyDate).get_dataframe('Inflation')
 
-        return [debt_to_gdp, gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit, inflation]
+        return [gdp_growth, trade_balance, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit, inflation]
 
 
 
@@ -60,6 +60,8 @@ class VariabilityToAverageReport(GenericReport):
 
         gdp_growth = self.analyser.gdp_growth.refine_set().add_filter_by_country(eurozone).add_average().get_variability(self.settings['country'])
 
+        trade_balance = self.analyser.trade_balance.refine_set().add_filter_by_country(eurozone).add_average().get_variability(self.settings['country'])
+        
         unemployment = self.analyser.unemployment.refine_set().add_filter_by_country(eurozone).rename_columns(self.modifyDate).add_average().get_variability(self.settings['country'])
 
         trade_union_density = self.analyser.trade_union_density.refine_set().add_filter_by_country(eurozone).add_average().get_variability(self.settings['country'])
@@ -72,7 +74,7 @@ class VariabilityToAverageReport(GenericReport):
 
         inflation = self.analyser.inflation.refine_set().add_filter_by_country(eurozone).rename_columns(self.modifyDate).add_average().get_variability(self.settings['country'])
 
-        return [gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit, inflation]
+        return [gdp_growth, trade_balance, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit, inflation]
 
 
 class RatioToAverageReport(GenericReport):
@@ -89,10 +91,35 @@ class RatioToAverageReport(GenericReport):
 
         government_spending = self.analyser.government_spending.refine_set().add_filter_by_country(eurozone).add_average().get_ratio_to_average(self.settings['country'])
 
-        intra_extra_trade = self.analyser.intra_extra_trade.refine_set().add_filter_by_country(eurozone).add_average().get_ratio_to_average(self.settings['country'], percent=True)
+        intra_extra_trade = self.analyser.intra_extra_trade.refine_set().add_filter_by_country(eurozone).add_average().get_ratio_to_average(self.settings['country'])
 
         deficit = self.analyser.deficit.refine_set().add_filter_by_country(eurozone).add_average().get_ratio_to_average(self.settings['country'])
 
         inflation = self.analyser.inflation.refine_set().add_filter_by_country(eurozone).rename_columns(self.modifyDate).add_average().get_ratio_to_average(self.settings['country'])
 
         return [gdp_growth, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit, inflation]
+
+
+class ChangeRateReport(GenericReport):
+
+    def generate_dataframes(self):
+
+        eurozone = ['Austria', 'Belgium', 'Germany', 'Italy', 'Ireland', 'Luxembourg', 'Netherlands', 'France',	'Finland',	'Greece', 'Spain', 'Portugal']
+
+        gdp_growth = self.analyser.gdp_growth.refine_set().add_filter_by_country(eurozone).get_change_rate(self.settings['country'])
+
+        trade_balance = self.analyser.trade_balance.refine_set().add_filter_by_country(eurozone).get_change_rate(self.settings['country'])
+
+        unemployment = self.analyser.unemployment.refine_set().add_filter_by_country(eurozone).rename_columns(self.modifyDate).add_average().get_change_rate(self.settings['country'])
+
+        trade_union_density = self.analyser.trade_union_density.refine_set().add_filter_by_country(eurozone).add_average().get_change_rate(self.settings['country'])
+
+        government_spending = self.analyser.government_spending.refine_set().add_filter_by_country(eurozone).add_average().get_change_rate(self.settings['country'])
+
+        intra_extra_trade = self.analyser.intra_extra_trade.refine_set().add_filter_by_country(eurozone).add_average().get_change_rate(self.settings['country'])
+
+        deficit = self.analyser.deficit.refine_set().add_filter_by_country(eurozone).add_average().get_change_rate(self.settings['country'])
+
+        inflation = self.analyser.inflation.refine_set().add_filter_by_country(eurozone).rename_columns(self.modifyDate).add_average().get_change_rate(self.settings['country'])
+
+        return [gdp_growth, trade_balance, unemployment, trade_union_density, government_spending, intra_extra_trade, deficit, inflation]

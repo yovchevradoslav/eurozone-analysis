@@ -26,7 +26,7 @@ class DataAnalyser:
 
     @error.throws_error(error.InvalidFilter)
     def add_filter_by_country(self, list_of_countries):
-        modified = self.df.loc[:, list_of_countries].dropna(how='all')
+        modified = self.df.loc['1998':'2021', list_of_countries].dropna(how='all')
         self.df = modified
         return self
 
@@ -66,7 +66,7 @@ class DataAnalyser:
         else:
             filteredDf = countryValues - average
         
-        filteredDf.name = self.data_properties.name
+        filteredDf.name = self.data_properties.name + ' Var'
         return filteredDf
 
     def get_ratio_to_average(self, country):
@@ -76,9 +76,18 @@ class DataAnalyser:
         average = self.df.loc[:,'Average']
         countryValues = self.df.loc[:,country]
         filteredDf = countryValues/average
-        filteredDf.name = self.data_properties.name
+        filteredDf.name = self.data_properties.name + ' Ratio'
         return filteredDf
     
+    def get_change_rate(self, country):
+        """
+        returns series of variability
+        """
+        countryValues = self.df.loc[:,country]
+        filteredDf = countryValues.pct_change()
+        filteredDf.name = self.data_properties.name + ' Change'
+        return filteredDf
+
     def get_var_to_average(self, country):
         """
         returns series of:
