@@ -48,3 +48,21 @@ finally:
     # change_rate_report_germany.publish('change_rate_report_germany')
     
     utils.merge_reports([simple_report_germany, variability_report_germany, ratio_report_germany, change_rate_report_germany], REPORTS_PATH, 'Germany')
+
+    simple_report_analyser_italy = analysers.GenericAnalyser(DATA_PATH)
+    simple_report_italy = reports.SimpleVariablesReport(simple_report_analyser_italy, REPORTS_PATH, {"country": "Italy"})
+    # simple_report_germany.publish('simple_report_germany')
+
+    variability_report_analyser_italy = analysers.GenericAnalyser(DATA_PATH)
+    variability_report_italy = reports.VariabilityToAverageReport(variability_report_analyser_italy, REPORTS_PATH, {"country": "Italy"})
+    # variability_report_germany.publish('variability_report_germany')
+
+    ratio_report_analyser_italy = analysers.GenericAnalyser(DATA_PATH)
+    ratio_report_italy = reports.RatioToAverageReport(ratio_report_analyser_italy, REPORTS_PATH, {"country": "Italy"})
+    # ratio_report_germany.publish('ratio_report_germany')
+
+    change_rate_report_analyser_italy = analysers.GenericAnalyser(DATA_PATH)
+    change_rate_report_italy = reports.ChangeRateReport(change_rate_report_analyser_italy, REPORTS_PATH, {"country": "Italy"})
+    # change_rate_report_germany.publish('change_rate_report_germany')
+    
+    utils.merge_reports([simple_report_italy, variability_report_italy, ratio_report_italy, change_rate_report_italy], REPORTS_PATH, 'Italy')
