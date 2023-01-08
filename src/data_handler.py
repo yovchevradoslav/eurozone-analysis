@@ -62,11 +62,11 @@ class DataAnalyser:
         average = self.df.loc[:,'Average']
         countryValues = self.df.loc[:,country]
         if percent:
-            filteredDf = (countryValues - average)/100
+            filteredDf = (countryValues - average)/average
         else:
-            filteredDf = countryValues - average
+            filteredDf = (countryValues - average)/average
         
-        filteredDf.name = self.data_properties.name + ' Var'
+        filteredDf.name = self.data_properties.name + ' VAR'
         return filteredDf
 
     def get_ratio_to_average(self, country):
@@ -76,7 +76,7 @@ class DataAnalyser:
         average = self.df.loc[:,'Average']
         countryValues = self.df.loc[:,country]
         filteredDf = countryValues/average
-        filteredDf.name = self.data_properties.name + ' Ratio'
+        filteredDf.name = self.data_properties.name + ' RAT'
         return filteredDf
     
     def get_change_rate(self, country):
@@ -85,7 +85,7 @@ class DataAnalyser:
         """
         countryValues = self.df.loc[:,country]
         filteredDf = countryValues.pct_change()
-        filteredDf.name = self.data_properties.name + ' Change'
+        filteredDf.name = self.data_properties.name + ' CH_R'
         return filteredDf
 
     def get_var_to_average(self, country):
