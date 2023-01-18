@@ -15,15 +15,12 @@ except Exception as e:
 finally:
     os.mkdir(REPORTS_PATH)
 
-    germany = report.CombinedReport(DATA_PATH, REPORTS_PATH, 'Germany')
-    germany.publish()
+    portugal = report.CombinedReport(DATA_PATH, REPORTS_PATH, 'Portugal')
+    portugal.publish()
 
     greece = report.CombinedReport(DATA_PATH, REPORTS_PATH, 'Greece')
     greece.publish()
 
-    italy = report.CombinedReport(DATA_PATH, REPORTS_PATH, 'Italy')
-    italy.publish()
-
-    slovakia = report.CombinedReport(DATA_PATH, REPORTS_PATH, 'Slovakia')
-    slovakia.publish()
+    finland = report.CombinedReport(DATA_PATH, REPORTS_PATH, 'Finland')
+    finland.publish()
 

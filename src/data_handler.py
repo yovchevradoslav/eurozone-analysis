@@ -21,12 +21,12 @@ class DataAnalyser:
 
 
     def get_dataframe(self, name: str):
-        self.df.name = name
-        return self.df
+        self.df.name = self.data_properties.name
+        return self.df.loc['2001':'2021']
 
     @error.throws_error(error.InvalidFilter)
     def add_filter_by_country(self, list_of_countries):
-        modified = self.df.loc['1998':'2021', list_of_countries].dropna(how='all')
+        modified = self.df.loc[:, list_of_countries].dropna(how='all')
         self.df = modified
         return self
 
@@ -67,7 +67,7 @@ class DataAnalyser:
             filteredDf = (countryValues - average)/average
         
         filteredDf.name = self.data_properties.name + ' VAR'
-        return filteredDf
+        return filteredDf.loc['2001':'2021']
 
     def get_ratio_to_average(self, country):
         """
@@ -77,7 +77,7 @@ class DataAnalyser:
         countryValues = self.df.loc[:,country]
         filteredDf = countryValues/average
         filteredDf.name = self.data_properties.name + ' RAT'
-        return filteredDf
+        return filteredDf.loc['2001':'2021']
     
     def get_change_rate(self, country):
         """
@@ -86,7 +86,7 @@ class DataAnalyser:
         countryValues = self.df.loc[:,country]
         filteredDf = countryValues.pct_change()
         filteredDf.name = self.data_properties.name + ' CH_R'
-        return filteredDf
+        return filteredDf.loc['2001':'2021']
 
     def get_var_to_average(self, country):
         """
@@ -97,7 +97,7 @@ class DataAnalyser:
         countryValues = self.df.loc[:,country]
         filteredDf = (countryValues - average)/average
         filteredDf.name = self.data_properties.name
-        return filteredDf
+        return filteredDf.loc['2001':'2021']
 
     def transform_to_float(self, x):
         try:

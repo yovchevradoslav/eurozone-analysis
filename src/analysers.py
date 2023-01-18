@@ -6,8 +6,8 @@ class GenericAnalyser:
     def __init__(self, data_path):
         
         GDPGrowthDescriptor = data_types.CSVTimeseries("GDP_GR", "{}/gdp-growth.csv".format(data_path), "Country Name", 3, ",", True)
-        DebtToGDPDescriptor = data_types.CSVTimeseries("DEBT_GDP", "{}/debt-to-gdp.csv".format(data_path), "Country Name", 3, ",", True)
-        TradeBalance = data_types.CSVTimeseries("TRADE_BAL", "{}/trade-balance.csv".format(data_path), "Country Name", 3, ",", True)
+        DebtToGDPDescriptor = data_types.TSV("D_GDP", "{}/debt-to-gdp".format(data_path), "Country Name", True)
+        TradeBalance = data_types.CSVTimeseries("TR_BAL", "{}/trade-balance.csv".format(data_path), "Country Name", 3, ",", True)
         UnemploymentDescriptor = data_types.TSV("UNEMP", "{}/unemployment.tsv".format(data_path), "Country Name", True)
         TradeUnionDensityDescriptor = data_types.CSVSequence("TR_U_D", "{}/trade-unionism.csv".format(data_path), "Country", "Time", "Value", ",", True)
         GovernmentSpendingDescriptor = data_types.TSV("GOV_SP", "{}/gov-expenditure.tsv".format(data_path), "Country", True)
@@ -17,7 +17,7 @@ class GenericAnalyser:
 
 
         self.gdp_growth = data_handler.CSVTimeseriesAnalyser(GDPGrowthDescriptor)
-        self.debt_to_gdp = data_handler.CSVTimeseriesAnalyser(DebtToGDPDescriptor)
+        self.debt_to_gdp = data_handler.TSVAnalyser(DebtToGDPDescriptor)
         self.trade_balance = data_handler.CSVTimeseriesAnalyser(TradeBalance)
         self.unemployment = data_handler.TSVAnalyser(UnemploymentDescriptor)
         self.trade_union_density = data_handler.CSVSequenceAnalyser(TradeUnionDensityDescriptor)

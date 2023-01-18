@@ -13,8 +13,8 @@ class CombinedReport():
             simple_report_analyser = analysers.GenericAnalyser(self.DATA_PATH)
             simple_report = reports.SimpleVariablesReport(simple_report_analyser, self.REPORTS_PATH, {"country": self.country})
 
-            variability_report_analyser = analysers.GenericAnalyser(self.DATA_PATH)
-            variability_report = reports.VariabilityToAverageReport(variability_report_analyser, self.REPORTS_PATH, {"country": self.country})
+            # variability_report_analyser = analysers.GenericAnalyser(self.DATA_PATH)
+            # variability_report = reports.VariabilityToAverageReport(variability_report_analyser, self.REPORTS_PATH, {"country": self.country})
 
             ratio_report_analyser = analysers.GenericAnalyser(self.DATA_PATH)
             ratio_report = reports.RatioToAverageReport(ratio_report_analyser, self.REPORTS_PATH, {"country": self.country})
@@ -22,4 +22,4 @@ class CombinedReport():
             change_rate_report_analyser = analysers.GenericAnalyser(self.DATA_PATH)
             change_rate_report = reports.ChangeRateReport(change_rate_report_analyser, self.REPORTS_PATH, {"country": self.country})
     
-            utils.merge_reports([simple_report, variability_report, ratio_report, change_rate_report], self.REPORTS_PATH, self.country)
+            utils.merge_reports([simple_report, ratio_report, change_rate_report], self.REPORTS_PATH, self.country)
